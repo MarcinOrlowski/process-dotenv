@@ -1,5 +1,5 @@
 {
-  "name": "marcin-orlowski/dotenv-helper",
+  "name": "marcin-orlowski/process-dotenv",
   "description": "Little tool to help build DotEnv (.env) files from templates",
   "minimum-stability": "stable",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "dev-tools"
   ],
   "bin": [
-    "bin/process-env"
+    "bin/process-dotenv"
   ],
   "authors": [
     {
