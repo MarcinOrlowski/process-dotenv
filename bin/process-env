@@ -1,0 +1,101 @@
+#!//usr/bin/php -q
+<?php
+/**
+ * Little tool to help build DotEnv files from templates
+ *
+ * @author    Marcin Orlowski <mail (#) marcinorlowski (.) com>
+ * @copyright 2016 Marcin Orlowski
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link      https://github.com/MarcinOrlowski/dotenv-helper
+ */
+
+/**
+ * Aborts script execution with custom message and return code.
+ *
+ * @param string  $msg  Message to display.
+ * @param integer $code Code to be returned.
+ *
+ * @return void
+ */
+function abort($msg, $code = 1)
+{
+	echo $msg;
+	exit($code);
+}
+
+/******************************************************/
+
+if ($_SERVER['argc'] < 2) {
+	abort(sprintf("Usage: %s .env.dist [KEY=VAL KEY2=VAL2...]\n", $_SERVER['argv'][0]));
+}
+
+$file_in = $_SERVER['argv'][1];
+
+if (file_exists($file_in)) {
+	$content = file($file_in, FILE_IGNORE_NEW_LINES);
+	$out = [];
+	if ($content !== false) {
+		// key=val mapping built from provided arguments
+		$map = [];
+
+		// if key=val mappings are given as argument, populate
+		// $map array with this data
+		if ($_SERVER['argc'] > 2) {
+			for ($i = 2; $i < $_SERVER['argc']; $i++) {
+				$entry = $_SERVER['argv'][ $i ];
+				$pos = strpos($entry, '=');
+				if ($pos !== false) {
+					$key = substr($entry, 0, $pos);
+					$val = substr($entry, ($pos + 1));
+					$map[ $key ] = $val;
+				}
+			}
+		}
+
+		foreach ($content as $line) {
+			switch (substr(trim($line), 0, 1)) {
+				// copy comment lines unprocessed
+				case '#':
+					$out[] = $line;
+					break;
+
+				default:
+					$pos = strpos($line, '=');
+					$new_val = null;
+
+					// if we have assignment entry, check if there's
+					// anything matching in $map. If not, look for env
+					// variable with that name. If still nothing found
+					// copy it as is
+					if ($pos !== false) {
+						$key = substr($line, 0, $pos);
+						if (array_key_exists($key, $map)) {
+							$new_val = "{$key}={$map[$key]}";
+						} else {
+							$val = getenv($key);
+							if ($val !== false) {
+								$new_val = "{$key}={$val}";
+							}
+						}
+					}
+
+					if (is_null($new_val)) {
+						$new_val = $line;
+					}
+
+					$out[] = $new_val;
+					break;
+			}
+		}
+
+		// output content of processed .env
+		echo implode("\n", $out);
+	} else {
+		abort("Failed processing '{$file_in}' source file\n");
+	}
+} else {
+	abort("Source file '{$file_in}' not found\n");
+}
+
+// done
+exit(0);

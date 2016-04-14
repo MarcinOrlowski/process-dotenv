@@ -1,0 +1,11 @@
+.idea/
+
+# Vagrant VM
+.vagrant/
+
+# Vim tmp files
+*.swp
+
+# Composer files
+vendor/
+composer.lock

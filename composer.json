@@ -1,0 +1,30 @@
+{
+  "name": "marcin-orlowski/dotenv-helper",
+  "description": "Little tool to help build DotEnv (.env) files from templates",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "keywords": [
+    "dotenv",
+    "laravel",
+    "helper",
+    "continous-integration",
+    "ci",
+    "teamcity",
+    "travis",
+    "dev-tools"
+  ],
+  "bin": [
+    "bin/process-env"
+  ],
+  "authors": [
+    {
+      "name": "Marcin Orlowski"
+    }
+  ],
+  "require": {
+    "php": ">=5.1.2"
+  },
+  "require-dev": {
+    "marcin-orlowski/coding-standard": "^1.0"
+  }
+}
