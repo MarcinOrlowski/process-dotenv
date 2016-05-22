@@ -1,5 +1,9 @@
 # Process DotEnv - .env building helper tool #
 
+[![Latest Stable Version](https://poser.pugx.org/marcin-orlowski/process-dotenv/v/stable)](https://packagist.org/packages/marcin-orlowski/process-dotenv)
+[![Latest Unstable Version](https://poser.pugx.org/marcin-orlowski/process-dotenv/v/unstable)](https://packagist.org/packages/marcin-orlowski/process-dotenv)
+[![License](https://poser.pugx.org/marcin-orlowski/process-dotenv/license)](https://packagist.org/packages/marcin-orlowski/process-dotenv)
+
 DotEnv file (`.env`) are often used as runtime configuration files (i.e. Laravel based PHP projects)
 and are not stored in your repository, so if you use Continuous Integration (CI) tools like Team City,
 you need to create that `.env` file before tests can be started. Process DotEnv tool wass created to
