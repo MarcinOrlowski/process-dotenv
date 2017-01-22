@@ -5,64 +5,71 @@
 [![License](https://poser.pugx.org/marcin-orlowski/process-dotenv/license)](https://packagist.org/packages/marcin-orlowski/process-dotenv)
 
 DotEnv file (`.env`) are often used as runtime configuration files (i.e. Laravel based PHP projects)
-and are not stored in your repository, so if you use Continuous Integration (CI) tools like Team City,
+and are not stored in your repository, so if you use Continuous Integration (CI) tools like TeamCity,
 you need to create that `.env` file before tests can be started. Process DotEnv tool wass created to
-help you with step.
+help you with this step.
+
+**NOTE:** Whenever I say `.env` or `.env.dist` I only mean **file format**, not file name. Your
+file names can be anything you like as long its content follows dot-env file format!
 
 The main assumption is that you usually have file like `.env.dist` in your repository (so people
-know how to create production `.env`). This tool reads that file and tries to get values
-for keys present in the file by looking into environmental variables or command line arguments
-to produce populated, ready to use DotEnv file. Having `.env` created that way lets you keep all
-needed runtime configuration (i.e. API keys etc) directly in CI configuration, in run step in Team City.
+can find out how production `.env` is expected to look lie). This tool reads that `.env.dist` file, get
+default values from it and then checks if any of these should be overriden by values passed as either
+command line argument or environmental variables. Once this step is done, it echoes result of the merge
+as  populated, ready to use `.env` file. Having `.env` created that way lets you keep all
+needed runtime configuration (i.e. API keys etc) away from repository (i.e. directly in your CI server
+configuration), while ignoring all the non-sensitive ones you could set up based on defaults.
 
-**NOTE:** To avoid accidental overwrites this tool only echoes content of echoed file, so to create
-physical `.env` file for your code you need to redirect stdout with regular ` ... > .env`.
+**NOTE:** To avoid accidental overwrites `process-dotenv` does not create any files but echoes the final
+content, so to create physical `.env` file for your code you need to redirect output to file with regular
+redirection: ` ... > .env`.
 
 ## Env variable subsitution ##
 
-Let's assume our `.env.dist` looks like this:
+Let's assume our `.env.dist` file looks like this:
 
     KEY=val
     BAR=zen
     FOO=
 
-then knowing you want to have own value set for `KEY` you set your build
-step in CI as shell script:
+Now, knowing your app requires `KEY` to be valid i.e. API key for tests to pass we can make it replaced with 
+`process-dotenv` like that (sample mimics shell session):
 
-    export KEY=bar
-    vendor/bin/process-dotenv .env.dist > .env
+    $ KEY=barbar
+    $ vendor/bin/process-dotenv .env.dist > .env
 
-which shall produce `.env` file with content as follow:
+which shall produce `.env` file with the following content:
 
-    KEY=bar
+    KEY=barbar
     BAR=zen
     FOO=
 
-As you noticed, original value of `KEY` is replaced with what we provided, while `BAR`
-and `FOO`, for which we did not provide replacements, were copied unaltered.
+As you noticed, original value of `KEY` is replaced with what we provided via enviromental variable,
+while `BAR` and `FOO`, for which we did not provide replacements, were copied unaltered.
 
 
 ## Argument subsitution ##
 
-Aside of env variables you can also pass `key=val` arguments to `process-dotenv` achieve the same
-goal:
+Aside of env variables you can also pass `key=val` pairs as `process-dotenv` invocation arguments to
+achieve the same results:
 
-    vendor/bin/process-dotenv .env.dist KEY=bar > .env
+    $ vendor/bin/process-dotenv .env.dist KEY=barbar > .env
 
-**IMPORTANT:** first argument always refers to source env file.
+**IMPORTANT:** first argument always refers to source dot-env file, followed by (optional) KEY=VAL pairs.
+Naturally you can pass as many pairs as you need and file names can be whatever you like.
 
 
 ## Combined substitution ##
 
 Both substitution methods can be used together. When key is provided as argument and
-also exists as Env variable, then command line provided value will be used:
+also exists as enviromental variable, then command line provided value will be used:
 
-    export KEY=bar
-    vendor/bin/process-dotenv .env.dist KEY=foo > .env
+    $ KEY=barbar
+    $ vendor/bin/process-dotenv .env.dist KEY=value > .env
 
-will produce:
+would produce:
 
-    KEY=foo
+    KEY=value
     BAR=zen
     FOO=
 
@@ -71,14 +78,37 @@ will produce:
 
 Use composer to install this package as your development dependency:
 
-    composer require --dev marcin-orlowski/process-dotenv
+    $ composer require --dev marcin-orlowski/process-dotenv
 
 
 It will install `process-dotenv` script in usual `vendor/bin` folder.
 
 
+## Troubleshoting ##
+
+Please remember that certain, especially generic key names can already be set up by
+your shell or system. For example, on key `USER` that holds id of currently logged
+in user or `HOME` that points to home directory of said user are variables already
+set. You can list all of them with `printenv` or `export` to ensure none of your keys
+matches. 
+
+Simple test to see if your `.env.dist` uses such "risky" keys is to simply run `process-dotenv`
+without any substitution and then diff result file with dist file:
+
+    $ vendor/bin/process-dotenv .env.dist | diff .env
+
+If you got "conflicts" then you can either change your keys or at least substitute that key
+via command line arguments to ensure system's values won't pollute your resulting `.env`:
+
+    $ vendor/bin/process-dotenv .env.dist USER= HOME= > .env
+
+**NOTE:** in case you use conflicting key (i.e. `USER`) but you want it to keep the
+value set in `.env.dist` you currently must pass it as command like pair. `process-dotenv` 
+cannot tell which env variables is "good" and which is "bad", so as soon as it find one exists,
+it will simply use its value. That's why you must override it via command line pair.
+
 ## License ##
 
 * Written and copyrighted by Marcin Orlowski
-* Response Builder is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+* Process Dotenv tool is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
 
