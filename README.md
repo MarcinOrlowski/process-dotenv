@@ -4,21 +4,21 @@
 [![Latest Unstable Version](https://poser.pugx.org/marcin-orlowski/process-dotenv/v/unstable)](https://packagist.org/packages/marcin-orlowski/process-dotenv)
 [![License](https://poser.pugx.org/marcin-orlowski/process-dotenv/license)](https://packagist.org/packages/marcin-orlowski/process-dotenv)
 
-DotEnv file (`.env`) are often used as runtime configuration files (i.e. Laravel based PHP projects)
-and are not stored in your repository, so if you use Continuous Integration (CI) tools like TeamCity,
-you need to create that `.env` file before tests can be started. Process DotEnv tool wass created to
-help you with this step.
+DotEnv file (`.env`) are often used as runtime configuration files (i.e. [Laravel](https://laravel.com/)
+based PHP projects) and are not stored in your repository, so if you use Continuous Integration (CI) 
+tools like TeamCity or Travis-CI, you need to create that `.env` file before tests can be started. 
+`Process-DotEnv` is a tool wass created to help you with this task.
 
 **NOTE:** Whenever I say `.env` or `.env.dist` I only mean **file format**, not file name. Your
 file names can be anything you like as long its content follows dot-env file format!
 
-The main assumption is that you usually have file like `.env.dist` in your repository (so people
-can find out how production `.env` is expected to look lie). This tool reads that `.env.dist` file, get
-default values from it and then checks if any of these should be overriden by values passed as either
-command line argument or environmental variables. Once this step is done, it echoes result of the merge
-as  populated, ready to use `.env` file. Having `.env` created that way lets you keep all
-needed runtime configuration (i.e. API keys etc) away from repository (i.e. directly in your CI server
-configuration), while ignoring all the non-sensitive ones you could set up based on defaults.
+The main assumption is that you usually have file name `.env.dist` in your repository so people
+using your code can easily figure out how to create production ready `.env` file. So if we'd 
+tread your `.env.dist` as **template**, then with the right tool you'd be able to easily create
+production ready `.env` file. and this is where `process-dotenv` steps in. The goal (and code :)
+is pretty simple - generate `.env` file based on the template `.env.dist` but with all neccessary 
+changes applied. So ths tool reads your `.env.dist` file and spits it out **replacing** all values
+that you wanted it to change either by setting enviromental variables or as command line arguments.
 
 **NOTE:** To avoid accidental overwrites `process-dotenv` does not create any files but echoes the final
 content, so to create physical `.env` file for your code you need to redirect output to file with regular
@@ -32,8 +32,8 @@ Let's assume our `.env.dist` file looks like this:
     BAR=zen
     FOO=
 
-Now, knowing your app requires `KEY` to be valid i.e. API key for tests to pass we can make it replaced with 
-`process-dotenv` like that (sample mimics shell session):
+Now, knowing your app requires `KEY` to be valid i.e. API key for tests to pass we can have it replaced with 
+`process-dotenv` (sample mimics shell session, for scripts get rid of `$`):
 
     $ KEY=barbar
     $ vendor/bin/process-dotenv .env.dist > .env
@@ -55,14 +55,14 @@ achieve the same results:
 
     $ vendor/bin/process-dotenv .env.dist KEY=barbar > .env
 
-**IMPORTANT:** first argument always refers to source dot-env file, followed by (optional) KEY=VAL pairs.
-Naturally you can pass as many pairs as you need and file names can be whatever you like.
+**IMPORTANT:** first argument always refers to source dot-env file, followed by (optional) `KEY=VAL` pairs.
+You can pass as many pairs as you need and file names can be whatever you like.
 
 
 ## Combined substitution ##
 
 Both substitution methods can be used together. When key is provided as argument and
-also exists as enviromental variable, then command line provided value will be used:
+also exists as enviromental variable, then command line provided value takes precedence:
 
     $ KEY=barbar
     $ vendor/bin/process-dotenv .env.dist KEY=value > .env
