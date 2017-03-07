@@ -109,6 +109,6 @@ it will simply use its value. That's why you must override it via command line p
 
 ## License ##
 
-* Written and copyrighted by Marcin Orlowski
+* Copyright &copy; 2016-2017 by Marcin Orlowski
 * Process Dotenv tool is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
 
