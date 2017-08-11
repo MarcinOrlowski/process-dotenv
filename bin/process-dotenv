@@ -1,12 +1,12 @@
-#!//usr/bin/php -q
+#!/usr/bin/php -q
 <?php
 /**
  * Little tool to help build DotEnv files from templates
  *
  * @author    Marcin Orlowski <mail (#) marcinorlowski (.) com>
- * @copyright 2016 Marcin Orlowski
+ * @copyright 2016-2017 Marcin Orlowski
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link      https://github.com/MarcinOrlowski/dotenv-helper
+ * @link      https://github.com/MarcinOrlowski/process-dotenv
  */
 
 /**
