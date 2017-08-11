@@ -76,10 +76,9 @@ would produce:
 
 ## Installation ##
 
-Use composer to install this package as your development dependency:
+Use composer to install this package as your dependency:
 
-    $ composer require --dev marcin-orlowski/process-dotenv
-
+    $ composer require marcin-orlowski/process-dotenv
 
 It will install `process-dotenv` script in usual `vendor/bin` folder.
 
@@ -87,20 +86,23 @@ It will install `process-dotenv` script in usual `vendor/bin` folder.
 ## Troubleshoting ##
 
 Please remember that certain, especially generic key names can already be set up by
-your shell or system. For example, on key `USER` that holds id of currently logged
-in user or `HOME` that points to home directory of said user are variables already
-set. You can list all of them with `printenv` or `export` to ensure none of your keys
-matches. 
+your shell or system. For example `USER` is usually present and holds id of currently logged
+in user,`HOME` points to home directory of said user are variables already
+set, etc. You can list all of them with `printenv` or `export` to ensure none of your keys
+matches, but it is good habit to be more creative and avoid such short and potentially conflicting
+names.
 
-Simple test to see if your `.env.dist` uses such "risky" keys is to simply run `process-dotenv`
-without any substitution and then diff result file with dist file:
+Simple test to see if your `.env.dist` uses such "risky" keys is to run `process-dotenv`
+without any own substitution provided and diff result file with dist file:
 
-    $ vendor/bin/process-dotenv .env.dist | diff .env
+    $ vendor/bin/process-dotenv .env.dist | diff .env.dist
 
-If you got "conflicts" then you can either change your keys or at least substitute that key
+If you got conflicts then you can either change your keys or at least substitute that key
 via command line arguments to ensure system's values won't pollute your resulting `.env`:
 
     $ vendor/bin/process-dotenv .env.dist USER= HOME= > .env
+
+but this is pretty error prone and is not recommended.
 
 **NOTE:** in case you use conflicting key (i.e. `USER`) but you want it to keep the
 value set in `.env.dist` you currently must pass it as command like pair. `process-dotenv` 
