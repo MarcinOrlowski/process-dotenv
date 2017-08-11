@@ -74,6 +74,10 @@ would produce:
     FOO=
 
 
+## Requirements ##
+
+ * PHP 5+ (cli)
+ 
 ## Installation ##
 
 Use composer to install this package as your dependency:
