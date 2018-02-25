@@ -1,12 +1,11 @@
 {
   "name": "marcin-orlowski/process-dotenv",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Little tool to help build DotEnv (.env) files from templates",
   "minimum-stability": "stable",
   "license": "MIT",
   "keywords": [
     "dotenv",
-    "laravel",
     "helper",
     "continous-integration",
     "ci",

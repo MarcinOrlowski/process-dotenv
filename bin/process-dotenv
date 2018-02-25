@@ -4,7 +4,7 @@
  * Little tool to help build DotEnv files from templates
  *
  * @author    Marcin Orlowski <mail (#) marcinorlowski (.) com>
- * @copyright 2016-2017 Marcin Orlowski
+ * @copyright 2016-2018 Marcin Orlowski
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link      https://github.com/MarcinOrlowski/process-dotenv
  */
@@ -97,5 +97,5 @@ if (file_exists($file_in)) {
 	abort("Source file '{$file_in}' not found\n");
 }
 
-// done
 exit(0);
+
