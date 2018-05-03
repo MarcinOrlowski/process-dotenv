@@ -14,25 +14,25 @@ file names can be anything you like as long its content follows dot-env file for
 
 The main assumption is that you usually have file name `.env.dist` in your repository so people
 using your code can easily figure out how to create production ready `.env` file. So if we'd 
-tread your `.env.dist` as **template**, then with the right tool you'd be able to easily create
-production ready `.env` file. and this is where `process-dotenv` steps in. The goal (and code :)
-is pretty simple - generate `.env` file based on the template `.env.dist` but with all neccessary 
-changes applied. So ths tool reads your `.env.dist` file and spits it out **replacing** all values
-that you wanted it to change either by setting enviromental variables or as command line arguments.
+treat your `.env.dist` as **template file**, then with the right tool you'd be able to easily create
+production ready `.env` file. This is where `process-dotenv` steps in. The goal is pretty simple - 
+generate `.env` file based on the template `.env.dist` but with all neccessary changes applied. 
+So ths tool reads your `.env.dist` file and spits it out **replacing** all values that you wanted
+it to change either by setting enviromental variables or as command line arguments.
 
 **NOTE:** To avoid accidental overwrites `process-dotenv` does not create any files but echoes the final
-content, so to create physical `.env` file for your code you need to redirect output to file with regular
-redirection: ` ... > .env`.
+content to standard output, so to create physical `.env` file for your code you need to redirect output 
+to file with regular redirection: ` ... > .env`.
 
 ## Env variable subsitution ##
 
-Let's assume our `.env.dist` file looks like this:
+Let's assume our `.env.dist` template file looks like this:
 
     KEY=val
     BAR=zen
     FOO=
 
-Now, knowing your app requires `KEY` to be valid i.e. API key for tests to pass we can have it replaced with 
+Now, knowing your app requires `KEY` to be valid API key for tests to pass we can have it replaced with 
 `process-dotenv` (sample mimics shell session, for scripts get rid of `$`):
 
     $ KEY=barbar
@@ -117,4 +117,3 @@ it will simply use its value. That's why you must override it via command line p
 
 * Copyright &copy; 2016-2018 by Marcin Orlowski
 * Process Dotenv tool is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
-
