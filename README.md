@@ -4,27 +4,30 @@
 [![Latest Unstable Version](https://poser.pugx.org/marcin-orlowski/process-dotenv/v/unstable)](https://packagist.org/packages/marcin-orlowski/process-dotenv)
 [![License](https://poser.pugx.org/marcin-orlowski/process-dotenv/license)](https://packagist.org/packages/marcin-orlowski/process-dotenv)
 
-DotEnv file (`.env`) are often used as runtime configuration files (i.e. [Laravel](https://laravel.com/)
-based PHP projects) and are not stored in your repository, so if you use Continuous Integration (CI) 
-tools like TeamCity or Travis-CI, you need to create that `.env` file before tests can be started. 
-`Process-DotEnv` is a tool wass created to help you with this task.
+`.env` (AKA DotEnv) files are often used to store project configuration (i.e. for [Laravel](https://laravel.com/)
+based PHP projects). As they usually contain sensitive information as API keys or DB credentials, `.env` files should
+never be versioned. This also means that if you need to use/run your project in automated pipeline, i.e. with 
+Continuous Integration (CI) tools like TeamCity or Travis-CI, you need to create proper `.env` file before using the
+code. As `.env` file usually contains all the project configuration, there will be much more fields than said i.e.
+API key. Additionally, as project develops, new entries can be added and existing entries altered or tweaked.
+It's a developers' common practice to create `.env.dist` file, fill as much as possible (ommiting sensitive information)
+and put it into VCS. 
+
+So if we treat said `.env.dist` as **template file**, then with the right tool in hand we'd be able to
+create corresponding `.env` file easily. And this is where `process-dotenv` steps in. The goal of this 
+small tool is pretty simple - generate `.env` file based on the template `.env.dist`, filling/replacing
+specified template keys with provided values (taken either from env vars, for supplied as invocation
+arguments).
 
 **NOTE:** Whenever I say `.env` or `.env.dist` I only mean **file format**, not file name. Your
 file names can be anything you like as long its content follows dot-env file format!
 
-The main assumption is that you usually have file name `.env.dist` in your repository so people
-using your code can easily figure out how to create production ready `.env` file. So if we'd 
-treat your `.env.dist` as **template file**, then with the right tool you'd be able to easily create
-production ready `.env` file. This is where `process-dotenv` steps in. The goal is pretty simple - 
-generate `.env` file based on the template `.env.dist` but with all neccessary changes applied. 
-So ths tool reads your `.env.dist` file and spits it out **replacing** all values that you wanted
-it to change either by setting enviromental variables or as command line arguments.
-
-**NOTE:** To avoid accidental overwrites `process-dotenv` does not create any files but echoes the final
-content to standard output, so to create physical `.env` file for your code you need to redirect output 
-to file with regular redirection: ` ... > .env`.
+**NOTE:** To avoid accidental overwrites `process-dotenv` outputs processed content to standard output. To to
+create physical `.env` file need to redirect stdout to a file. Please see examples for more details.
 
 ## Env variable subsitution ##
+
+**NOTE:** all samples mimics shell session, so ommit `$` line for use in scripts.:
 
 Let's assume our `.env.dist` template file looks like this:
 
@@ -33,7 +36,7 @@ Let's assume our `.env.dist` template file looks like this:
     FOO=
 
 Now, knowing your app requires `KEY` to be valid API key for tests to pass we can have it replaced with 
-`process-dotenv` (sample mimics shell session, for scripts get rid of `$`):
+`process-dotenv`:
 
     $ KEY=barbar
     $ vendor/bin/process-dotenv .env.dist > .env
@@ -58,7 +61,6 @@ achieve the same results:
 **IMPORTANT:** first argument always refers to source dot-env file, followed by (optional) `KEY=VAL` pairs.
 You can pass as many pairs as you need and file names can be whatever you like.
 
-
 ## Combined substitution ##
 
 Both substitution methods can be used together. When key is provided as argument and
@@ -76,7 +78,7 @@ would produce:
 
 ## Requirements ##
 
- * PHP 5+ (cli)
+ * PHP 5+ (CLI)
  
 ## Installation ##
 
