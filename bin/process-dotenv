@@ -4,7 +4,7 @@
  * Little tool to help build DotEnv files from templates
  *
  * @author    Marcin Orlowski <mail (#) marcinorlowski (.) com>
- * @copyright 2016-2018 Marcin Orlowski
+ * @copyright 2016-2021 Marcin Orlowski
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link      https://github.com/MarcinOrlowski/process-dotenv
  */
@@ -19,14 +19,14 @@
  */
 function abort($msg, $code = 1)
 {
-	echo $msg;
+	echo "{$msg}\n";
 	exit($code);
 }
 
 /******************************************************/
 
 if ($_SERVER['argc'] < 2) {
-	abort(sprintf("Usage: %s .env.dist [KEY=VAL KEY2=VAL2...]\n", $_SERVER['argv'][0]));
+	abort(sprintf("Usage: %s .env.dist [KEY=VAL KEY2=VAL2...]", $_SERVER['argv'][0]));
 }
 
 $file_in = $_SERVER['argv'][1];
@@ -91,10 +91,10 @@ if (file_exists($file_in)) {
 		// output content of processed .env
 		echo implode("\n", $out);
 	} else {
-		abort("Failed processing '{$file_in}' source file\n");
+		abort("Failed processing '{$file_in}' source file");
 	}
 } else {
-	abort("Source file '{$file_in}' not found\n");
+	abort("Source file '{$file_in}' not found");
 }
 
 exit(0);

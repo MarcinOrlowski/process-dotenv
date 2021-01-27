@@ -1,3 +1,8 @@
+v1.0.5 (2021-01-01)
+===================
+* Updated documentation
+* Code cleanup
+
 v1.0.4 (2018-02-25)
 ===================
 * Removed `minimum-stability` from `composer.json`
